@@ -1,26 +1,40 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { Task } from './entities/task.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { ProjectsService } from 'src/projects/projects.service';
 
 @Injectable()
 export class TasksService {
-  create(createTaskDto: CreateTaskDto) {
-    return 'This action adds a new task';
+  constructor(
+    @InjectRepository(Task)
+    private readonly taskRepository : Repository<Task>,
+    private readonly projectService : ProjectsService,
+){}
+
+  async create(createProjectDto: CreateTaskDto) {
+    const project = await this.projectService.findOneByOrFail(
+      createProjectDto.projectId
+    );
+    return this.taskRepository.save({ ...createProjectDto, project});
   }
 
   findAll() {
-    return `This action returns all tasks`;
+    return this.taskRepository.find()
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} task`;
+    return this.taskRepository.findOne({where: {id}});
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return `This action updates a #${id} task`;
+  update(id: number, updateProjectDto: UpdateTaskDto) {
+    return this.taskRepository.update(id, updateProjectDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} task`;
+    return this.taskRepository.delete(id);
   }
 }
