@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Project } from 'src/projects/entities/project.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 /* eslint-disable prettier/prettier */
 export enum TaskStatus {
@@ -23,5 +24,9 @@ export class Task {
         nullable:false
     })
     project: Project;
+
+    @ManyToOne(() => User, (user) => user.projects)
+    @JoinColumn()
+    user: User;
 }
 

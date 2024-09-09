@@ -4,12 +4,18 @@ import { ProjectsService } from './projects.service';
 import { ProjectsController } from './projects.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Project } from './entities/project.entity';
-import { PaginationModule } from 'src/modules/pagination/pagination.module';
+import { PaginationModule } from '../modules/pagination/pagination.module';
+import { User } from '../users/entities/user.entity';
+import { UsersModule } from '../users/users.module';
 
 @Module({
-  imports: [PaginationModule, TypeOrmModule.forFeature([Project])],
+  imports: [
+    PaginationModule,
+    UsersModule,
+    TypeOrmModule.forFeature([Project, User]),
+  ],
   controllers: [ProjectsController],
   providers: [ProjectsService],
-  exports: [ProjectsService]
+  exports: [ProjectsService],
 })
-export class ProjectsModule {}
+export class ProjectModule {}
