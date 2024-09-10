@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Post } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Project } from './entities/project.entity';
@@ -11,6 +11,7 @@ import {
   FilterDto,
 } from 'src/modules/pagination/dto/filter.dto';
 import { UsersService } from '../users/users.service';
+import { ApiOperation } from '@nestjs/swagger';
 
 @Injectable()
 export class ProjectsService {
@@ -20,7 +21,8 @@ export class ProjectsService {
     private readonly pageService: PageService,
     private readonly usersService: UsersService,
   ) {}
-
+@ApiOperation({summary: "Cria um novo projeto"})
+@Post()
   async create(userEmail: string, createProjectDto: CreateProjectDto) {
     const user = await this.usersService.findOneByOrFail({ email: userEmail });
     return this.projectRepository.save({
